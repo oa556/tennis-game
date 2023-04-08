@@ -1,10 +1,14 @@
-﻿namespace TennisGame.Client
+﻿using TennisGame.Client.Pages;
+
+namespace TennisGame.Client;
+
+public partial class AppShell : Shell
 {
-    public partial class AppShell : Shell
+    public AppShell()
     {
-        public AppShell()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
+
+        Routing.RegisterRoute(nameof(AddSingleGame), typeof(AddSingleGame));
+        Routing.RegisterRoute(nameof(AddDoubleGame), typeof(AddDoubleGame));
     }
 }

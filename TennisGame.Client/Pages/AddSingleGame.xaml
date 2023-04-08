@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TennisGame.Client.Pages.AddSingleGame"
+             Title="Add single game">
+
+    <VerticalStackLayout
+            Spacing="5"
+            Padding="30,0"
+            VerticalOptions="Center">
+
+        <Picker x:Name="OpponentPicker"
+                Title="Select an opponent"
+                ItemDisplayBinding="{Binding Name}"
+                HorizontalOptions="Center">
+        </Picker>
+
+        <Label Text="What was the result?"
+               HorizontalOptions="Center" />
+        <RadioButton Content="Win"
+                     x:Name="WinResultOption"
+                     Value="1"
+                     HorizontalOptions="Center" />
+        <RadioButton Content="Loss"
+                     x:Name="LossResultOption"
+                     Value="2"
+                     HorizontalOptions="Center" />
+
+        <Button
+            Text="Submit"
+            Clicked="OnSubmitClicked"
+            HorizontalOptions="Fill" />
+
+    </VerticalStackLayout>
+
+</ContentPage>

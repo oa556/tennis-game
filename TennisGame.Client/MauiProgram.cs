@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
+using TennisGame.Client.Pages;
+using TennisGame.Client.Services;
 
 namespace TennisGame.Client
 {
@@ -18,6 +20,13 @@ namespace TennisGame.Client
 #if DEBUG
 		builder.Logging.AddDebug();
 #endif
+
+            builder.Services.AddHttpClient<IDataService, DataService>();
+            builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+
+            builder.Services.AddTransient<MainPage>();
+            builder.Services.AddTransient<AddSingleGame>();
+            builder.Services.AddTransient<AddDoubleGame>();
 
             return builder.Build();
         }

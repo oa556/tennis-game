@@ -1,24 +1,37 @@
-﻿namespace TennisGame.Client
+﻿using TennisGame.Client.Pages;
+using TennisGame.Client.Services;
+
+namespace TennisGame.Client;
+
+public partial class MainPage : ContentPage
 {
-    public partial class MainPage : ContentPage
+    private readonly IDataService _dataService;
+    private readonly IAuthenticationService _authenticationService;
+
+    public MainPage(IDataService dataService,
+                    IAuthenticationService authentificationService)
     {
-        int count = 0;
+        InitializeComponent();
+        _dataService = dataService;
+        _authenticationService = authentificationService;
+    }
 
-        public MainPage()
-        {
-            InitializeComponent();
-        }
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
 
-        private void OnCounterClicked(object sender, EventArgs e)
-        {
-            count++;
+        var currentPlayer = await _dataService.GetPlayerAsync(_authenticationService.CurrentUserId);
+        SkillLabel.Text = currentPlayer?.Skill.ToString() ?? "?";
+        NameLabel.Text = $"Hi, {currentPlayer?.Name ?? "Anonymous"}";
+    }
 
-            if (count == 1)
-                CounterBtn.Text = $"Clicked {count} time";
-            else
-                CounterBtn.Text = $"Clicked {count} times";
+    public async void OnAddSingleGameClicked(object sender, EventArgs e)
+    {
+        await Shell.Current.GoToAsync(nameof(AddSingleGame));
+    }
 
-            SemanticScreenReader.Announce(CounterBtn.Text);
-        }
+    public async void OnAddDoubleGameClicked(object sender, EventArgs e)
+    {
+        await Shell.Current.GoToAsync(nameof(AddDoubleGame));
     }
 }
