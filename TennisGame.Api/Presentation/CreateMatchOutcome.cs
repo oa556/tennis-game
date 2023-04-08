@@ -3,17 +3,18 @@ using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using TennisGame.Api.Services;
 using TennisGame.Shared;
 
 namespace TennisGame.Api.Presentation;
 
-public class CreateMatchOutcome
+internal class CreateMatchOutcome
 {
-    private ILogger<CreateMatchOutcome> _logger;
+    private readonly IMatchOutcomeService _matchOutcomeService;
 
-    public CreateMatchOutcome(ILoggerFactory loggerFactory)
+    public CreateMatchOutcome(IMatchOutcomeService matchOutcomeService)
     {
-        _logger = loggerFactory.CreateLogger<CreateMatchOutcome>();
+        _matchOutcomeService = matchOutcomeService;
     }
 
     [Function("CreateMatchOutcome")]
@@ -28,7 +29,14 @@ public class CreateMatchOutcome
             return req.CreateResponse(HttpStatusCode.BadRequest);
         }
 
-        _logger.LogInformation(request.ToString());
+        try
+        {
+            await _matchOutcomeService.CreateMatchOutcomeAsync(request);
+        }
+        catch (ArgumentException)
+        {
+            return req.CreateResponse(HttpStatusCode.BadRequest);
+        }
 
         var response = req.CreateResponse(HttpStatusCode.Created);
         return response;

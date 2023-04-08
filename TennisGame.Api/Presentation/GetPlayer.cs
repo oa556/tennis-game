@@ -6,18 +6,30 @@ using Newtonsoft.Json;
 using TennisGame.Api.Models;
 using TennisGame.Shared;
 using Mapster;
+using TennisGame.Api.Persistence;
 
 namespace TennisGame.Api.Presentation;
 
-public class GetPlayer
+internal class GetPlayer
 {
+    private readonly IPlayerRepository _playerRepository;
+
+    public GetPlayer(IPlayerRepository playerRepository)
+    {
+        _playerRepository = playerRepository;
+    }
+
     [Function("GetPlayer")]
     public async Task<HttpResponseData> RunAsync(
         [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "players/{id:int}")]
         HttpRequestData req,
         int id)
     {
-        var player = new Player { Id = id, Name = "Player 1", Skill = 7 };
+        Player? player = await _playerRepository.FindAsync(id);
+        if (player == null)
+        {
+            return req.CreateResponse(HttpStatusCode.NotFound);
+        }
 
         var response = req.CreateResponse(HttpStatusCode.OK);
         response.Headers.Add("Content-Type", "application/json; charset=utf-8");
